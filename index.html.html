@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="theme-color" content="#16213e" />
+  <title>West London Support Directory</title>
+
+  <style>
+    :root{
+      --bg1:#667eea;
+      --bg2:#764ba2;
+      --ink:#2c3e50;
+      --muted:#6b7280;
+      --card:#ffffff;
+      --soft:#f6f7fb;
+      --stroke:#e6e8ef;
+      --radius:16px;
+      --shadow: 0 18px 50px rgba(0,0,0,.15);
+      --shadowSoft: 0 6px 18px rgba(0,0,0,.10);
+      --accent:#667eea;
+      --accent2:#764ba2;
+      --danger:#e74c3c;
+      --warn:#f39c12;
+      --faith:#8e44ad;
+      --comm:#3498db;
+      --focus: rgba(102,126,234,.35);
+    }
+
+    *{ margin:0; padding:0; box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height:1.6;
+      color:var(--ink);
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 100%);
+      padding: clamp(8px, 2vw, 20px);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Accessibility */
+    .skip-link{
+      position:absolute;
+      left:-999px;
+      top: 10px;
+      background:#fff;
+      color:#111;
+      padding:10px 12px;
+      border-radius:10px;
+      z-index:9999;
+      box-shadow: var(--shadowSoft);
+    }
+    .skip-link:focus{ left: 10px; outline: 3px solid var(--focus); }
+
+    a, button, summary, input { -webkit-tap-highlight-color: rgba(102,126,234,0.22); }
+    :focus-visible{ outline: 3px solid var(--focus); outline-offset: 2px; }
+
+    /* Layout container (missing in original) */
+    .container{
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: clamp(12px, 2vw, 20px);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    header.header{
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color:#fff;
+      padding: clamp(22px, 5vw, 44px) clamp(16px, 3.5vw, 34px);
+      text-align:center;
+    }
+    .header h1{
+      font-size: clamp(1.55rem, 4.2vw, 2.35rem);
+      font-weight: 800;
+      letter-spacing: .2px;
+      margin-bottom: 10px;
+    }
+    .header p{
+      font-size: clamp(.95rem, 2.2vw, 1.05rem);
+      opacity:.92;
+      line-height:1.75;
+      margin: 6px 0;
+    }
+
+    /* Sticky quick nav (mobile-friendly) */
+    .chipbar-wrap{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--stroke);
+      padding: 10px max(12px, env(safe-area-inset-left)) 10px max(12px, env(safe-area-inset-right));
+    }
+    .chipbar{
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      scrollbar-width: none;
+    }
+    .chipbar::-webkit-scrollbar{ display:none; }
+    .chip{
+      flex: 0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+      text-decoration:none;
+      font-weight: 650;
+      font-size: .92rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      white-space: nowrap;
+    }
+    .chip:active{ transform: translateY(1px); }
+    .chip strong{ font-weight: 800; }
+
+    main.content{ padding: clamp(14px, 3vw, 32px); }
+
+    /* Search */
+    .searchbar{
+      background: var(--soft);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 16px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .searchbar label{
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--ink);
+      flex: 0 0 auto;
+    }
+    .searchbar input{
+      width: 100%;
+      border: 1px solid var(--stroke);
+      background:#fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 1rem;
+    }
+    .searchhint{
+      color: var(--muted);
+      font-size: .9rem;
+      margin: 6px 0 18px 0;
+    }
+
+    /* Big callouts */
+    .panel{
+      color:#fff;
+      padding: clamp(18px, 3.2vw, 30px);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      box-shadow: var(--shadowSoft);
+    }
+    .panel h2{
+      font-size: clamp(1.18rem, 2.9vw, 1.6rem);
+      margin-bottom: 8px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 800;
+    }
+    .panel .subtitle{
+      font-size: 1rem;
+      opacity:.95;
+      margin-bottom: 16px;
+    }
+
+    .quick-wins{ background: linear-gradient(135deg, var(--warn) 0%, #e67e22 100%); }
+    .emergency-banner{ background: linear-gradient(135deg, var(--danger) 0%, #c0392b 100%); }
+    .faith-section{ background: linear-gradient(135deg, var(--faith) 0%, #9b59b6 100%); }
+    .community-section{ background: linear-gradient(135deg, var(--comm) 0%, #2980b9 100%); }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .tile{
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.22);
+      padding: 16px;
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+    }
+    .tile h3{ font-size: 1.05rem; margin-bottom: 8px; font-weight: 750; }
+    .tile p{ font-size: .93rem; line-height: 1.5; opacity: .98; }
+
+    /* Emergency buttons */
+    .emergency-item a{
+      color:#fff;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.25);
+      background: rgba(255,255,255,.12);
+      font-size: 1.18rem;
+      font-weight: 850;
+      margin-top: 6px;
+      width: fit-content;
+    }
+    .emergency-item a:hover{ background: rgba(255,255,255,.18); }
+    .emergency-item small{ display:block; opacity:.92; font-size:.88rem; margin-top: 6px; }
+
+    /* Accordions for long sections */
+    details.section{
+      background: #fff;
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      margin: 14px 0;
+      overflow:hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,.06);
+    }
+    details.section[open]{ box-shadow: 0 8px 18px rgba(0,0,0,.08); }
+
+    summary.section-header{
+      list-style: none;
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      padding: 14px 14px;
+      cursor: pointer;
+      user-select: none;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfe 100%);
+      border-bottom: 1px solid var(--stroke);
+    }
+    summary.section-header::-webkit-details-marker{ display:none; }
+
+    .section-icon{
+      font-size: 1.6rem;
+      width: 46px; height: 46px;
+      display:flex; align-items:center; justify-content:center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      flex: 0 0 auto;
+      color:#fff;
+    }
+    .section-title{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+      min-width:0;
+      flex:1;
+    }
+    .section-title h2{
+      font-size: 1.12rem;
+      color: var(--ink);
+      font-weight: 850;
+      line-height: 1.25;
+    }
+    .section-title p{
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+    .chev{
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid var(--stroke);
+      background:#fff;
+      flex: 0 0 auto;
+      color: var(--muted);
+    }
+    details[open] .chev{ transform: rotate(180deg); }
+
+    .section-body{ padding: 14px; background: #fff; }
+
+    /* Service cards */
+    .service-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+    .service-card{
+      background: var(--soft);
+      padding: 16px;
+      border-radius: 14px;
+      border-left: 5px solid var(--accent);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .service-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 18px rgba(0,0,0,.09);
+    }
+    .service-card h3{
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+      font-weight: 850;
+    }
+    .service-card .helps{
+      color: #4b5563;
+      font-size: .95rem;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .actions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-decoration:none;
+      border-radius: 12px;
+      padding: 10px 12px;
+      min-height: 44px;
+      font-weight: 800;
+      border: 1px solid var(--stroke);
+      background:#fff;
+      color: var(--ink);
+      font-size: .95rem;
+    }
+    .btn.primary{
+      border-color: rgba(102,126,234,.35);
+      background: rgba(102,126,234,.10);
+      color: #2b2f55;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .meta{
+      margin-top: 10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: .82rem;
+      background: var(--accent);
+      color:#fff;
+      font-weight: 800;
+    }
+
+    /* Simple cards inside faith/community panels */
+    .panel .cardlike{
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.20);
+      padding: 16px;
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+    }
+    .panel .cardlike h3{ font-size: 1.05rem; margin-bottom: 8px; font-weight: 850; }
+    .panel .cardlike .helps{ font-size: .93rem; opacity:.95; margin-bottom: 10px; }
+    .panel .cardlike a{ color:#fff; text-decoration:none; display:block; margin: 6px 0; }
+    .panel .cardlike a:hover{ text-decoration: underline; }
+    .panel .cardlike .small{ font-size: .9rem; opacity:.95; }
+
+
+    .panel .cardlike .small a{
+      color:#fff;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .panel .cardlike .small a:hover{ opacity:.95; }
+
+
+    /* Footer */
+    footer.footer{
+      background: #eef1f6;
+      padding: 22px 18px;
+      text-align:center;
+      font-size: .92rem;
+      color: #5b6470;
+    }
+    footer.footer p{ margin: 6px 0; }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ transition:none !important; }
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 768px){
+      .searchbar{ flex-direction: column; align-items: stretch; }
+      .chipbar-wrap{ padding-top: 8px; padding-bottom: 8px; }
+      .chip{ font-size: .9rem; }
+      .service-card:hover{ transform:none; }
+      .service-grid{ grid-template-columns: 1fr; }
+      .grid{ grid-template-columns: 1fr; }
+      .emergency-item a{ width: 100%; }
+      summary.section-header{ padding: 14px 12px; }
+      .section-body{ padding: 12px; }
+    }
+
+    @media print{
+      body{ background:#fff; padding:0; }
+      .chipbar-wrap{ display:none; }
+      .container{ box-shadow:none; }
+      details.section{ break-inside: avoid; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="container" id="top">
+    <header class="header">
+      <h1>West London Support Directory</h1>
+      <p>Psychosocial support for Black African residents</p>
+      <p>Start with <strong>Try This First</strong> • If in crisis, go to <strong>Need Help Right Now?</strong></p>
+    </header>
+
+    <div class="chipbar-wrap" aria-label="Quick navigation">
+      <nav class="chipbar">
+        <a class="chip" href="#try"><strong>⚡</strong> Try This First</a>
+        <a class="chip" href="#helpnow"><strong>🚨</strong> Need Help Now</a>
+        <a class="chip" href="#faith"><strong>🙏</strong> Faith</a>
+        <a class="chip" href="#community"><strong>🤝</strong> Community</a>
+        <a class="chip" href="#finances"><strong>💷</strong> Money</a>
+        <a class="chip" href="#housing"><strong>🏠</strong> Housing</a>
+        <a class="chip" href="#food"><strong>🍽️</strong> Food</a>
+        <a class="chip" href="#carers"><strong>❤️</strong> Carers</a>
+        <a class="chip" href="#rights"><strong>⚖️</strong> Rights</a>
+        <a class="chip" href="#mental"><strong>🧠</strong> Mental Health</a>
+        <a class="chip" href="#women"><strong>👩</strong> Women</a>
+      </nav>
+    </div>
+
+    <main id="main" class="content">
+      <!-- Search -->
+      <div class="searchbar" role="search">
+        <label for="q">Search</label>
+        <input id="q" type="search" placeholder="Try: debt, Ealing, carers, therapy, Southall…" autocomplete="off" />
+      </div>
+      <p class="searchhint">Tip: the search checks service names + what they help with + tags.</p>
+
+      <!-- TRY THIS FIRST -->
+      <section class="panel quick-wins" id="try" aria-labelledby="try-title">
+        <h2 id="try-title">⚡ Try This First</h2>
+        <p class="subtitle">Start here if you're feeling stressed right now. Pick one action below.</p>
+
+        <div class="grid">
+          <div class="tile searchable">
+            <h3>🧘 Pause + Name the Stress</h3>
+            <p>Say out loud: “This is stress, not failure.” Then do 5 slow breaths (in 4, out 6).</p>
+          </div>
+          <div class="tile searchable">
+            <h3>🚶 Move for 5–10 Minutes</h3>
+            <p>Walk, stretch, or dance to a song you love. Movement can lower stress hormones.</p>
+          </div>
+          <div class="tile searchable">
+            <h3>✅ Do One Small Task</h3>
+            <p>Drink water, tidy one surface, or message one trusted person.</p>
+          </div>
+          <div class="tile searchable">
+            <h3>🌬️ Box Breathing</h3>
+            <p>In 4 • hold 4 • out 4 • hold 4. Repeat 4 times.</p>
+          </div>
+          <div class="tile searchable">
+            <h3>🙏 Prayer / Spiritual Coping</h3>
+            <p>If faith helps you: short prayer, scripture/dua, or quiet gratitude.</p>
+          </div>
+          <div class="tile searchable">
+            <h3>💬 Talk It Out</h3>
+            <p>Voice-note or call someone who “gets it”—family, friend, or community member.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMERGENCY -->
+      <section class="panel emergency-banner" id="helpnow" aria-labelledby="helpnow-title">
+        <h2 id="helpnow-title">🚨 Need Help Right Now?</h2>
+        <p class="subtitle">If you feel unsafe, overwhelmed, or in crisis (24/7 numbers)</p>
+
+        <div class="grid">
+          <div class="tile emergency-item searchable">
+            <strong>🚑 Emergency Services</strong>
+            <a href="tel:999" aria-label="Call 999">999</a>
+            <small>If immediate danger</small>
+          </div>
+          <div class="tile emergency-item searchable">
+            <strong>🏥 NHS 111</strong>
+            <a href="tel:111" aria-label="Call NHS 111">111</a>
+            <small>Urgent health advice (option 2 for mental health)</small>
+          </div>
+          <div class="tile emergency-item searchable">
+            <strong>💚 Crisis Line (Ealing)</strong>
+            <a href="tel:08003284444" aria-label="Call Ealing crisis line 0800 328 4444">0800 328 4444</a>
+            <small>West London NHS Trust</small>
+          </div>
+          <div class="tile emergency-item searchable">
+            <strong>🌙 Safe Space Ealing</strong>
+            <a href="tel:02074710583" aria-label="Call Safe Space Ealing 020 7471 0583">020 7471 0583</a>
+            <small>Evenings drop-in support</small>
+          </div>
+          <div class="tile emergency-item searchable">
+            <strong>☎️ Samaritans</strong>
+            <a href="tel:116123" aria-label="Call Samaritans 116 123">116 123</a>
+            <small>Someone to talk to, day or night</small>
+          </div>
+          <div class="tile emergency-item searchable">
+            <strong>💬 Shout Text Line</strong>
+            <a href="sms:85258?body=SHOUT" aria-label="Text SHOUT to 85258">Text SHOUT to 85258</a>
+            <small>Text support anytime</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAITH -->
+      <section class="panel faith-section" id="faith" aria-labelledby="faith-title">
+        <h2 id="faith-title">🙏 Faith-Based Organisations</h2>
+        <p class="subtitle">Christian & Muslim communities in Ealing and wider London</p>
+
+        <div class="grid">
+          <div class="cardlike searchable">
+            <h3>Ealing Community Church ⛪</h3>
+            <p class="helps">Church community, support, prayer, groups</p>
+            <div class="small">📞 <a href="tel:02088407508" aria-label="Call 020 8840 7508">020 8840 7508</a></div>
+            <a href="https://ecc.org.uk" target="_blank" rel="noopener">🌐 ecc.org.uk</a>
+            <div class="small">📍 W5 4UB</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>Southall Church of God ⛪</h3>
+            <p class="helps">Worship, prayer, community support</p>
+            <div class="small">📞 <a href="tel:03000306415" aria-label="Call 0300 030 6415">0300 030 6415</a></div>
+            <a href="https://southallcog.com" target="_blank" rel="noopener">🌐 southallcog.com</a>
+            <div class="small">📍 UB2 4EA</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>Winners Chapel Lewisham ⛪</h3>
+            <p class="helps">Faith community, support network</p>
+            <div class="small">📞 <a href="tel:07964917519" aria-label="Call 07964 917 519">07964 917 519</a></div>
+            <a href="https://winnerschapellewisham.org.uk" target="_blank" rel="noopener">🌐 winnerschapellewisham.org.uk</a>
+            <div class="small">📍 SE13 7AT (travel required)</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>UKIM West London Islamic Centre 🕌</h3>
+            <p class="helps">Mosque, community support, warm space</p>
+            <div class="small">📞 <a href="tel:02088404140" aria-label="Call 020 8840 4140">020 8840 4140</a></div>
+            <a href="https://wlic.co.uk" target="_blank" rel="noopener">🌐 wlic.co.uk</a>
+            <div class="small">📍 W13 0SQ</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>Acton Mosque 🕌</h3>
+            <p class="helps">Mosque and community support</p>
+            <div class="small">📞 <a href="tel:02089938073" aria-label="Call 020 8993 8073">020 8993 8073</a></div>
+            <a href="https://actonmosque.org" target="_blank" rel="noopener">🌐 actonmosque.org</a>
+            <div class="small">📍 W3 6LS</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>Jamia Masjid Islamic Centre 🕌</h3>
+            <p class="helps">Mosque and community support (Southall)</p>
+            <div class="small">📞 <a href="tel:02089333965" aria-label="Call 020 8933 3965">020 8933 3965</a></div>
+            <a href="https://jmicsouthall.com" target="_blank" rel="noopener">🌐 jmicsouthall.com</a>
+            <div class="small">📍 UB1 1HE</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMUNITY -->
+      <section class="panel community-section" id="community" aria-labelledby="community-title">
+        <h2 id="community-title">🤝 Community & Cultural Connection</h2>
+        <p class="subtitle">Black-led and culturally grounded spaces</p>
+
+        <div class="grid">
+          <div class="cardlike searchable">
+            <h3>Caribbean & African Collective Ealing (CACE)</h3>
+            <p class="helps">Community hub and activities for Caribbean & African communities</p>
+            <a href="https://cace.org.uk/" target="_blank" rel="noopener">🌐 cace.org.uk</a>
+            <div class="small">📍 W13 9BE (Ealing)</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>The Ubele Initiative</h3>
+            <p class="helps">Black-led social enterprise supporting African diaspora communities</p>
+            <div class="small">📞 <a href="tel:02080501800" aria-label="Call 020 8050 1800">020 8050 1800</a></div>
+            <a href="https://ubele.org/" target="_blank" rel="noopener">🌐 ubele.org</a>
+            <div class="small">📍 N22 5JD (travel required)</div>
+          </div>
+
+          <div class="cardlike searchable">
+            <h3>The Africa Centre</h3>
+            <p class="helps">Culture, community, events, and support</p>
+            <div class="small">📞 <a href="tel:02073786112" aria-label="Call 020 7378 6112">020 7378 6112</a></div>
+            <a href="https://www.africacentre.org.uk/" target="_blank" rel="noopener">🌐 africacentre.org.uk</a>
+            <div class="small">📍 SE1 0BL (travel required)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LONG SECTIONS (accordion) -->
+      <details class="section" id="finances" open>
+        <summary class="section-header">
+          <div class="section-icon">💷</div>
+          <div class="section-title">
+            <h2>1. Finances and Debt</h2>
+            <p>Debt, benefits, advice, economic empowerment</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Ealing Advice Service</h3>
+              <p class="helps">Debt, benefits, housing & general advice</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085798429">📞 Call</a>
+                <a class="btn" href="https://ealingadvice.org" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>100 Black Men of London</h3>
+              <p class="helps">Economic empowerment, mentoring, wellbeing programmes</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02077543550">📞 Call</a>
+                <a class="btn" href="https://100bmol.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Black-led</span><span class="tag">Travel required</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>StepChange Debt Charity</h3>
+              <p class="helps">Free debt advice (phone/online)</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:03003035300">📞 Call</a>
+                <a class="btn" href="https://stepchange.org" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="housing" open>
+        <summary class="section-header">
+          <div class="section-icon">🏠</div>
+          <div class="section-title">
+            <h2>2. Housing</h2>
+            <p>Advice, homelessness prevention, tenant support</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Ealing Council Housing Solutions</h3>
+              <p class="helps">Housing advice, homelessness support, prevention</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02088258888">📞 Call</a>
+                <a class="btn" href="https://www.ealing.gov.uk/info/201086/housing/378/homelessness" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span><span class="tag">Homelessness/Prevention</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Shelter</h3>
+              <p class="helps">Housing advice line and web guides</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:08088004444">📞 Call</a>
+                <a class="btn" href="https://shelter.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Advice4Renters</h3>
+              <p class="helps">Tenant advice and housing support</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02076244327">📞 Call</a>
+                <a class="btn" href="https://adviceforrenters.org/" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">London-wide</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="food" open>
+        <summary class="section-header">
+          <div class="section-icon">🍽️</div>
+          <div class="section-title">
+            <h2>3. Food Banks</h2>
+            <p>Emergency food support</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Ealing Foodbank</h3>
+              <p class="helps">Emergency food support (check referral rules online)</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085711093">📞 Call</a>
+                <a class="btn" href="https://ealing.foodbank.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Brent Foodbank</h3>
+              <p class="helps">Food support (check centres and times online)</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02089692505">📞 Call</a>
+                <a class="btn" href="https://brent.foodbank.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Brent</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Hounslow Foodbank</h3>
+              <p class="helps">Food support (check centres and times online)</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:07719891787">📞 Call</a>
+                <a class="btn" href="https://www.hounslowfoodbox.org.uk/" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Hounslow</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="carers" open>
+        <summary class="section-header">
+          <div class="section-icon">❤️</div>
+          <div class="section-title">
+            <h2>4. Carer Support</h2>
+            <p>Support, breaks, advice, respite services</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Ealing Carers Partnership</h3>
+              <p class="helps">Support, breaks, advice, groups for unpaid carers</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02031376194">📞 Call</a>
+                <a class="btn" href="https://ealingcarers.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>The Grange Care Centre</h3>
+              <p class="helps">Carer support and respite services</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02088328600">📞 Call</a>
+                <a class="btn" href="https://www.bondcare.co.uk/care-homes" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">West London</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Carers UK</h3>
+              <p class="helps">Advice and information for carers</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:08088087777">📞 Call</a>
+                <a class="btn" href="https://carersuk.org" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="rights" open>
+        <summary class="section-header">
+          <div class="section-icon">⚖️</div>
+          <div class="section-title">
+            <h2>5. Racism and Discrimination</h2>
+            <p>Equality advice, workplace rights, discrimination support</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>West London Equality Centre</h3>
+              <p class="helps">Advice and support on discrimination & equality issues</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085772898">📞 Call</a>
+                <a class="btn" href="https://wlec.net" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>ACAS</h3>
+              <p class="helps">Workplace advice on discrimination, rights, employment issues</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:03001231100">📞 Call</a>
+                <a class="btn" href="https://acas.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Equality Advisory Support Service (EASS)</h3>
+              <p class="helps">Advice on discrimination and human rights</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:08088000082">📞 Call</a>
+                <a class="btn" href="https://www.equalityadvisoryservice.com/" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="mental" open>
+        <summary class="section-header">
+          <div class="section-icon">🧠</div>
+          <div class="section-title">
+            <h2>6. Mental Health</h2>
+            <p>Support, therapy signposting, culturally informed care</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>HFEH Mind (Ealing Office)</h3>
+              <p class="helps">Mental health support, groups, and advice</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085798429">📞 Call</a>
+                <a class="btn" href="https://hfehmind.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Black Minds Matter UK</h3>
+              <p class="helps">Therapy signposting and resources for Black people</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02037735499">📞 Call</a>
+                <a class="btn" href="https://blackmindsmatteruk.com" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Black-led</span><span class="tag">Online</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Black African & Asian Therapy Network (BAATN)</h3>
+              <p class="helps">Find Black therapists; culturally informed support</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02036000712">📞 Call</a>
+                <a class="btn" href="https://baatn.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Black-led</span><span class="tag">Online</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="healthnav" open>
+        <summary class="section-header">
+          <div class="section-icon">🏥</div>
+          <div class="section-title">
+            <h2>7. Health Inequalities & Healthcare Navigation</h2>
+            <p>Raise issues, diabetes support, legal advice</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Healthwatch Ealing</h3>
+              <p class="helps">Independent help to raise issues and improve services</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02038860830">📞 Call</a>
+                <a class="btn" href="https://www.healthwatchealing.org.uk/" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Diabetes UK Helpline</h3>
+              <p class="helps">Specialist diabetes advice + emotional support</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:03451232399">📞 Call</a>
+                <a class="btn" href="https://diabetes.org.uk/helpline" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">UK-wide</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Ealing Law Centre</h3>
+              <p class="helps">Legal advice that can support health and social needs</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085794598">📞 Call</a>
+                <a class="btn" href="https://ealinglawcentre.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="employment" open>
+        <summary class="section-header">
+          <div class="section-icon">💼</div>
+          <div class="section-title">
+            <h2>8. Employment & Education</h2>
+            <p>Support, advice, community programmes</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Horn of Africa Youth Association (HAYA)</h3>
+              <p class="helps">Support, advice and community programmes</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085899569">📞 Call</a>
+              </div>
+              <div class="meta"><span class="tag">Hounslow</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>100 Black Men of London</h3>
+              <p class="helps">Education & economic empowerment programmes</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02077543550">📞 Call</a>
+                <a class="btn" href="https://100bmol.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Black-led</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Ealing Advice Service</h3>
+              <p class="helps">Support with benefits, work issues, and referrals</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085798429">📞 Call</a>
+                <a class="btn" href="https://ealingadvice.org" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section" id="women" open>
+        <summary class="section-header">
+          <div class="section-icon">👩</div>
+          <div class="section-title">
+            <h2>9. Women's Support</h2>
+            <p>Advice, advocacy, specialist services</p>
+          </div>
+          <div class="chev" aria-hidden="true">⌄</div>
+        </summary>
+        <div class="section-body">
+          <div class="service-grid">
+            <div class="service-card searchable">
+              <h3>Southall Black Sisters</h3>
+              <p class="helps">Support for BME women & girls (advocacy, advice)</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02085710800">📞 Call</a>
+                <a class="btn" href="https://southallblacksisters.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Ealing (Southall)</span><span class="tag">Black-led</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Sistah Space</h3>
+              <p class="helps">Support for African & Caribbean heritage women affected by abuse</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:02078468350">📞 Call</a>
+                <a class="btn" href="https://sistahspace.org" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">Black-led</span><span class="tag">Travel required</span></div>
+            </div>
+
+            <div class="service-card searchable">
+              <h3>Women and Girls Network</h3>
+              <p class="helps">Advice line + specialist support for women affected by abuse</p>
+              <div class="actions">
+                <a class="btn primary" href="tel:08088010660">📞 Call</a>
+                <a class="btn" href="https://wgn.org.uk" target="_blank" rel="noopener">🌐 Website</a>
+              </div>
+              <div class="meta"><span class="tag">West London</span></div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div style="height:10px"></div>
+    </main>
+
+    <footer class="footer">
+      <p><strong>Important:</strong> Always check websites for latest opening times and details.</p>
+      <p>If you can travel: nearby hubs with more specialist services include Brent, Hounslow, and central London.</p>
+      <p>For information only • Not medical or legal advice</p>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      const input = document.getElementById('q');
+      const cards = Array.from(document.querySelectorAll('.searchable, .service-card, .tile, .cardlike'));
+      const detailsEls = Array.from(document.querySelectorAll('details.section'));
+
+      function textOf(el){
+        return (el.innerText || el.textContent || '').toLowerCase();
+      }
+
+      function filter(){
+        const q = (input.value || '').trim().toLowerCase();
+        let shown = 0;
+
+        cards.forEach(el => {
+          const match = !q || textOf(el).includes(q);
+          el.style.display = match ? '' : 'none';
+          if(match) shown++;
+        });
+
+        // Hide entire accordion if all its cards are hidden
+        detailsEls.forEach(d => {
+          const visibleInside = d.querySelector('.section-body')?.querySelectorAll(':scope .service-card:not([style*="display: none"])').length || 0;
+          // If search is active and nothing visible inside, hide accordion
+          if(q && visibleInside === 0) d.style.display = 'none';
+          else d.style.display = '';
+        });
+      }
+
+      input.addEventListener('input', filter);
+
+      // Mobile: collapse long sections by default (keep first 3 panels visible)
+      function initAccordions(){
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if(!isMobile) return;
+        // Keep first two accordions open (Finances + Housing), close the rest
+        detailsEls.forEach((d, idx) => {
+          if(idx > 1) d.removeAttribute('open');
+        });
+      }
+
+      initAccordions();
+    })();
+  </script>
+</body>
+</html>
